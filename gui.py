@@ -6,6 +6,8 @@ import time
 import game_controller
 import cv2
 import win32con
+import os
+import numpy as np
 
 class MainWindow(QFrame):
     def __init__(self) -> None:
@@ -33,6 +35,8 @@ class MainWindow(QFrame):
         time.sleep(0.3)
         img = game.take_png_screenshot()
         center_point = game.template_match("Screenshot_152.png", img)
+        if center_point is None:
+            return
         game.send_click(center_point)
         time.sleep(0.1)
         game.send_click(center_point)
@@ -71,7 +75,7 @@ class MainWindow(QFrame):
                 time.sleep(3)
                 continue
             game.send_click(point)
-            time.sleep(0.1)
+            time.sleep(0.3)
             game.send_key('U')
             time.sleep(2)
             game.send_key('7')
@@ -100,6 +104,18 @@ if __name__ == '__main__':
         window = MainWindow()
         window.show()
         sys.exit(app.exec_())
+    # elif len(sys.argv) >= 2 and sys.argv[1] == 'test':
+        # img = cv2.imread(os.path.join("tmp", "Screenshot_165.png") ,cv2.IMREAD_COLOR)
+        # lower_green = np.array([0, 255, 0])
+        # upper_green = np.array([0, 255, 0])
+        #
+        # # 指定した色に基づいたマスク画像の生成
+        # img_mask = cv2.inRange(img, lower_green, upper_green)
+        # img_mask = cv2.resize(img_mask, None, fx=2, fy=2, interpolation=cv2.INTER_NEAREST)
+        # cv2.imshow("",img_mask)
+        # cv2.waitKey()
+        # str = game_controller.GameController.img_to_string(img_mask, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzゆかり[]>-")
+        # print(str)
     else:
         MainWindow.start_watch_for_virtual()
 

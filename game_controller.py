@@ -11,6 +11,7 @@ from sklearn.cluster import KMeans
 import os
 from matplotlib import pyplot
 from PIL import ImageGrab
+import subprocess
 
 class GameController:
     _window_handle = 0
@@ -76,6 +77,34 @@ class GameController:
         img = cv2.cvtColor(np.asarray(img), cv2.COLOR_BGR2GRAY)
         return img
 
+    # ウインドウを最前面にしなくてもスクショがとれるが、環境によりできない場合もある
+    def take_png_screenshot_for_win10(self):
+        if not self._window_handle:
+            raise Exception("ウインドウが存在しない")
+        left, top, right, bottom = win32gui.GetWindowRect(self._window_handle)
+        width = right - left
+        height = bottom - top
+        hwnd_dc = win32gui.GetWindowDC(self._window_handle)
+        # Get a bitmap
+        mfc_dc = win32ui.CreateDCFromHandle(hwnd_dc)
+        save_dc = mfc_dc.CreateCompatibleDC()
+        save_bit_map = win32ui.CreateBitmap()
+        save_bit_map.CreateCompatibleBitmap(mfc_dc, width, height)
+        save_dc.SelectObject(save_bit_map)
+        result = windll.user32.PrintWindow(self._window_handle, save_dc.GetSafeHdc(), 1)
+        if result != 1:
+            raise Exception("スクショに失敗")
+        bmp_info = save_bit_map.GetInfo()
+        bmp_raw = save_bit_map.GetBitmapBits(False)
+        game_img = np.array(bmp_raw, np.uint8).reshape(bmp_info['bmHeight'], bmp_info['bmWidth'], 4)
+        # Clean Up
+        win32gui.DeleteObject(save_bit_map.GetHandle())
+        save_dc.DeleteDC()
+        mfc_dc.DeleteDC()
+        win32gui.ReleaseDC(self._window_handle, hwnd_dc)
+        gray_scale_img = cv2.cvtColor(game_img, cv2.COLOR_BGR2GRAY)
+        return gray_scale_img
+
     def send_key(self, key):
         if type(key) is str:
             key = ord(key)
@@ -91,43 +120,23 @@ class GameController:
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
-
-# if __name__ == '__main__':
-#     game = GameController()
-#     game.active_game_window()
-    # イージーシグナスへ移動
-    # img = game.take_png_screenshot()
-    # time.sleep(0.1)
-    # center_point = game.get_match_point("Screenshot_152.png", img)
-    # game.send_click(center_point)
-    # time.sleep(0.1)
-    # game.send_click(center_point)
-    # time.sleep(0.1)
-    # game.send_click(center_point)
-    # time.sleep(0.1)
-    # game.send_click([center_point[0] - 185, center_point[1]])
-    # time.sleep(0.1)
-    # game.send_click([center_point[0] - 25, center_point[1] + 265])
-    # time.sleep(1)
-
-    # グループ申請
-    # game.send_key('7')
-    # time.sleep(0.1)
-    # group_ss = game.take_png_screenshot()
-    # find_group_point = game.get_match_point("Screenshot_157.png", group_ss)
-    # game.send_click(find_group_point)
-    # group_list_ss = game.take_png_screenshot()
-    # my_group_point = game.template_match("Screenshot_159.png", group_list_ss)
-    # game.send_click([my_group_point[0]+160, my_group_point[1]])
-    # time.sleep(0.1)
-    # game.send_key(win32con.VK_RETURN)
-
-    # screen = game.take_png_screenshot()
-    # my_group_point = game.template_match("Screenshot_160.png", screen)
-
-
-    # cv2.imshow("a", img)
-    # cv2.waitKey()
-
-
+    @staticmethod
+    def img_to_string(img, char_set=None):
+        cv2.imwrite("tmp\\ocr.png", img)
+        command = "bin\\tess\\tesseract.exe --tessdata-dir bin\\tess\\tessdata tmp\\ocr.png tmp\\ocr "
+        if char_set is not None:
+            command += "-c tessedit_char_whitelist=" + char_set + " "
+        command += "-psm 7 "
+        command += "> nul 2>&1"
+        CREATE_NO_WINDOW = 0x08000000
+        subprocess.call(command, shell=True, creationflags=CREATE_NO_WINDOW)
+        # Get the largest line in txt
+        with open("tmp\\ocr.txt") as f:
+            content = f.read().splitlines()
+        output_line = ""
+        for line in content:
+            line = line.strip()
+            if len(line) > len(output_line):
+                output_line = line
+        return output_line
 
