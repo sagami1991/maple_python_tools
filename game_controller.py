@@ -10,7 +10,7 @@ import cv2
 from sklearn.cluster import KMeans
 import os
 from matplotlib import pyplot
-
+from PIL import ImageGrab
 
 class GameController:
     _window_handle = 0
@@ -68,29 +68,14 @@ class GameController:
     def take_png_screenshot(self):
         if not self._window_handle:
             raise Exception("ウインドウが存在しない")
+        self.active_game_window()
         # Crops the image from the desktop
-        left, top, right, bottom = win32gui.GetWindowRect(self._window_handle)
-        width = right - left
-        height = bottom - top
-        hwnd_dc = win32gui.GetWindowDC(self._window_handle)
-        # Get a bitmap
-        mfc_dc = win32ui.CreateDCFromHandle(hwnd_dc)
-        save_dc = mfc_dc.CreateCompatibleDC()
-        save_bit_map = win32ui.CreateBitmap()
-        save_bit_map.CreateCompatibleBitmap(mfc_dc, width, height)
-        save_dc.SelectObject(save_bit_map)
-        result = windll.user32.PrintWindow(self._window_handle, save_dc.GetSafeHdc(), 1)
-        if result != 1:
-            raise Exception("スクショに失敗")
-        bmp_info = save_bit_map.GetInfo()
-        bmp_raw = save_bit_map.GetBitmapBits(False)
-        game_img = np.array(bmp_raw, np.uint8).reshape(bmp_info['bmHeight'], bmp_info['bmWidth'], 4)
-        # Clean Up
-        win32gui.DeleteObject(save_bit_map.GetHandle())
-        save_dc.DeleteDC()
-        mfc_dc.DeleteDC()
-        win32gui.ReleaseDC(self._window_handle, hwnd_dc)
-        return cv2.cvtColor(game_img, cv2.COLOR_BGR2GRAY)
+        w, h = win32gui.GetClientRect(self._window_handle)[2:]
+        x, y = win32gui.ClientToScreen(self._window_handle, (0, 0))
+
+        img = ImageGrab.grab((x, y, x + w, y + h))
+        img = cv2.cvtColor(np.asarray(img), cv2.COLOR_BGR2GRAY)
+        return img
 
     def send_key(self, key):
         if type(key) is str:
