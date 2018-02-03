@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtWidgets import *
 import time
 import game_controller
-
+import cv2
 
 class MainWindow(QFrame):
     def __init__(self) -> None:
@@ -38,11 +38,19 @@ class MainWindow(QFrame):
 
             screen = game.take_png_screenshot()
             point = game.template_match("group_list_main_character_name.png", screen)
+            if point is None:
+                cv2.imshow("", screen)
+                cv2.waitKey()
+                continue
             game.send_click(point, True)
             time.sleep(0.1)
 
             screen = game.take_png_screenshot()
             point = game.template_match("group_expulsion.png", screen)
+            if point is None:
+                cv2.imshow("", screen)
+                cv2.waitKey()
+                continue
             game.send_click(point)
             time.sleep(5)
 
