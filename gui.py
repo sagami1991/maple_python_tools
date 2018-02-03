@@ -27,7 +27,7 @@ class MainWindow(QFrame):
             screen = game.take_png_screenshot()
             point = game.template_match("group_invite.png", screen)
             if point is None:
-                time.sleep(5)
+                time.sleep(3)
                 continue
             game.send_click(point)
             time.sleep(0.1)
