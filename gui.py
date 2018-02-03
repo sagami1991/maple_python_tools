@@ -80,8 +80,6 @@ class MainWindow(QFrame):
             screen = game.take_png_screenshot()
             point = game.template_match("group_list_main_character_name.png", screen)
             if point is None:
-                cv2.imshow("", screen)
-                cv2.waitKey()
                 continue
             game.send_click(point, True)
             time.sleep(0.3)
@@ -89,8 +87,6 @@ class MainWindow(QFrame):
             screen = game.take_png_screenshot()
             point = game.template_match("group_expulsion.png", screen)
             if point is None:
-                cv2.imshow("", screen)
-                cv2.waitKey()
                 continue
             game.send_click(point)
             time.sleep(0.3)
@@ -99,7 +95,7 @@ class MainWindow(QFrame):
 
 
 if __name__ == '__main__':
-    if sys.argv[1] == 'main':
+    if len(sys.argv) != 0 and sys.argv[1] == 'main':
         app = QApplication(sys.argv)
         window = MainWindow()
         window.show()
