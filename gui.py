@@ -95,7 +95,7 @@ class MainWindow(QFrame):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 0 and sys.argv[1] == 'main':
+    if len(sys.argv) >= 2 and sys.argv[1] == 'main':
         app = QApplication(sys.argv)
         window = MainWindow()
         window.show()
