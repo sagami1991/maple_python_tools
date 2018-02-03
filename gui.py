@@ -4,13 +4,14 @@ from PyQt5.QtWidgets import *
 import time
 import game_controller
 
+
 class MainWindow(QFrame):
     def __init__(self) -> None:
         super(MainWindow, self).__init__()
         self.setFixedSize(300, 200)
         self.setWindowTitle("Maple auto HS 2pc")
         button = QPushButton("仮想PC向け - 開始", self)
-        button.clicked.connect(self.start_watch_for_virtual)
+        button.clicked.connect(MainWindow.start_watch_for_virtual)
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
         hbox.addWidget(button)
@@ -19,7 +20,8 @@ class MainWindow(QFrame):
         vbox.addStretch(1)
         self.setLayout(vbox)
 
-    def start_watch_for_virtual(self):
+    @staticmethod
+    def start_watch_for_virtual():
         while True:
             game = game_controller.GameController()
             screen = game.take_png_screenshot()
@@ -50,7 +52,8 @@ class MainWindow(QFrame):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    MainWindow.start_watch_for_virtual()
+    # app = QApplication(sys.argv)
+    # window = MainWindow()
+    # window.show()
+    # sys.exit(app.exec_())
