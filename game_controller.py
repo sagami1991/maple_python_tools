@@ -54,7 +54,6 @@ class GameController:
         w, h = train_img.shape[::-1]
         result = cv2.matchTemplate(screen_shot, train_img, cv2.TM_CCOEFF_NORMED)
         loc = np.where(result >= 0.8)
-        print(loc)
         if len(loc[0]) is 0:
             print("マッチしませんでした。" + image_name)
             return None

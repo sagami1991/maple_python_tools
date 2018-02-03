@@ -52,6 +52,8 @@ class MainWindow(QFrame):
                 cv2.waitKey()
                 continue
             game.send_click(point)
+            time.sleep(0.3)
+            game.send_key('7')
             time.sleep(5)
 
 
