@@ -21,11 +21,11 @@ class MainWindow(QFrame):
 
     def start_watch_for_virtual(self):
         while True:
-            time.sleep(5)
             game = game_controller.GameController()
             screen = game.take_png_screenshot()
             point = game.template_match("group_invite.png", screen)
             if point is None:
+                time.sleep(5)
                 continue
             game.send_click(point)
             time.sleep(0.1)
@@ -42,6 +42,7 @@ class MainWindow(QFrame):
             screen = game.take_png_screenshot()
             point = game.template_match("group_expulsion.png", screen)
             game.send_click(point)
+            time.sleep(5)
 
 
 

@@ -18,9 +18,9 @@ class GameController:
 
     def __init__(self, debug=False):
         self._debug = debug
+        self._window_handle = win32gui.FindWindow("MapleStoryClass", "MapleStory")
 
     def active_game_window(self):
-        self._window_handle = win32gui.FindWindow("MapleStoryClass", "MapleStory")
         win32gui.SetForegroundWindow(self._window_handle)
 
     def get_match_point(self, image_name, screen_shot) -> [int, int]:
@@ -108,9 +108,9 @@ class GameController:
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
 
-if __name__ == '__main__':
-    game = GameController()
-    game.active_game_window()
+# if __name__ == '__main__':
+#     game = GameController()
+#     game.active_game_window()
     # イージーシグナスへ移動
     # img = game.take_png_screenshot()
     # time.sleep(0.1)
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     # game.send_click([center_point[0] - 185, center_point[1]])
     # time.sleep(0.1)
     # game.send_click([center_point[0] - 25, center_point[1] + 265])
-    time.sleep(1)
+    # time.sleep(1)
 
     # グループ申請
     # game.send_key('7')
@@ -138,8 +138,8 @@ if __name__ == '__main__':
     # time.sleep(0.1)
     # game.send_key(win32con.VK_RETURN)
 
-    screen = game.take_png_screenshot()
-    my_group_point = game.template_match("Screenshot_160.png", screen)
+    # screen = game.take_png_screenshot()
+    # my_group_point = game.template_match("Screenshot_160.png", screen)
 
 
     # cv2.imshow("a", img)
