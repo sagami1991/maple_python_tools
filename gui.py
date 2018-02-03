@@ -9,7 +9,7 @@ class MainWindow(QFrame):
         super(MainWindow, self).__init__()
         self.setFixedSize(300, 200)
         self.setWindowTitle("Maple auto HS 2pc")
-        button = QPushButton("仮想PC向け", self)
+        button = QPushButton("仮想PC向け - 開始", self)
         button.clicked.connect(self.start_watch_for_virtual)
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
