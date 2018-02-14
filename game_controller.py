@@ -78,7 +78,7 @@ class GameController:
         return img
 
     # ウインドウを最前面にしなくてもスクショがとれるが、環境によりできない場合もある
-    def take_png_screenshot_for_win10(self):
+    def take_png_screenshot_for_win10(self, isColor=False):
         if not self._window_handle:
             raise Exception("ウインドウが存在しない")
         left, top, right, bottom = win32gui.GetWindowRect(self._window_handle)
@@ -102,8 +102,11 @@ class GameController:
         save_dc.DeleteDC()
         mfc_dc.DeleteDC()
         win32gui.ReleaseDC(self._window_handle, hwnd_dc)
-        gray_scale_img = cv2.cvtColor(game_img, cv2.COLOR_BGR2GRAY)
-        return gray_scale_img
+        if isColor:
+            return cv2.cvtColor(game_img, cv2.COLOR_BGR2RGB)
+        else:
+            gray_scale_img = cv2.cvtColor(game_img, cv2.COLOR_BGR2GRAY)
+            return gray_scale_img
 
     def send_key(self, key):
         if type(key) is str:
