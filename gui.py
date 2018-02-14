@@ -65,57 +65,10 @@ class MainWindow(QFrame):
         time.sleep(0.3)
         game.send_key(win32con.VK_RETURN)
 
-    @staticmethod
-    def start_watch_for_virtual():
-        while True:
-            game = game_controller.GameController()
-            screen = game.take_png_screenshot()
-            point = game.template_match("group_invite.png", screen)
-            if point is None:
-                time.sleep(3)
-                continue
-            game.send_click(point)
-            time.sleep(0.3)
-            game.send_key('U')
-            time.sleep(2)
-            game.send_key('7')
-            time.sleep(1)
-
-            screen = game.take_png_screenshot()
-            point = game.template_match("group_list_main_character_name.png", screen)
-            if point is None:
-                continue
-            game.send_click(point, True)
-            time.sleep(0.3)
-
-            screen = game.take_png_screenshot()
-            point = game.template_match("group_expulsion.png", screen)
-            if point is None:
-                continue
-            game.send_click(point)
-            time.sleep(0.3)
-            game.send_key('7')
-            time.sleep(5)
-
 
 if __name__ == '__main__':
-    if len(sys.argv) >= 2 and sys.argv[1] == 'main':
-        app = QApplication(sys.argv)
-        window = MainWindow()
-        window.show()
-        sys.exit(app.exec_())
-    # elif len(sys.argv) >= 2 and sys.argv[1] == 'test':
-        # img = cv2.imread(os.path.join("tmp", "Screenshot_165.png") ,cv2.IMREAD_COLOR)
-        # lower_green = np.array([0, 255, 0])
-        # upper_green = np.array([0, 255, 0])
-        #
-        # # 指定した色に基づいたマスク画像の生成
-        # img_mask = cv2.inRange(img, lower_green, upper_green)
-        # img_mask = cv2.resize(img_mask, None, fx=2, fy=2, interpolation=cv2.INTER_NEAREST)
-        # cv2.imshow("",img_mask)
-        # cv2.waitKey()
-        # str = game_controller.GameController.img_to_string(img_mask, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzゆかり[]>-")
-        # print(str)
-    else:
-        MainWindow.start_watch_for_virtual()
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
 
