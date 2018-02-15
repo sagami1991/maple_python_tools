@@ -93,7 +93,7 @@ class GameController:
         save_dc.SelectObject(save_bit_map)
         result = windll.user32.PrintWindow(self._window_handle, save_dc.GetSafeHdc(), 1)
         if result != 1:
-            raise Exception("スクショに失敗")
+            raise Exception("スクリーンショットに失敗。おそらく管理者権限で実行されていない")
         bmp_info = save_bit_map.GetInfo()
         bmp_raw = save_bit_map.GetBitmapBits(False)
         game_img = np.array(bmp_raw, np.uint8).reshape(bmp_info['bmHeight'], bmp_info['bmWidth'], 4)

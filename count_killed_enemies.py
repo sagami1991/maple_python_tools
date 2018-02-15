@@ -21,7 +21,7 @@ def main():
         text = ""
         for [x, y, w, h] in rects:
             for i, number in enumerate(numbers):
-                if np.allclose(mask_image[y:y + 9, x:x + 2], number):
+                if np.allclose(mask_image[y:y+9, x:x+2], number):
                     text = text + str(i)
         if text != "":
             num = int(text)
@@ -39,24 +39,17 @@ def main():
 
 
 def get_logger():
-    logger = logging.getLogger("killed_enemies")
+    logger = logging.getLogger("")
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     sh = logging.StreamHandler()
     sh.setFormatter(formatter)
-    fh = logging.FileHandler(filename="log/count_killed_enemies.log")
-    fh.setFormatter(formatter)
     logger.addHandler(sh)
-    logger.addHandler(fh)
-    return logging
+    return logger
 
 # 輪郭抽出したものを座標データに変換する
 def convert_contours_to_rects(contours):
-    rects = []
-    for cnt in contours:
-        rects.append(cv2.boundingRect(cnt))
-    return rects
-
+    return list(map(lambda cnt:cv2.boundingRect(cnt), contours))
 
 # 同じx座標を削除、高さ9未満のもを削除、x座標でソート
 def remove_same_x_rect(rects):
@@ -73,12 +66,12 @@ def remove_same_x_rect(rects):
 # 比較用数字画像の取得
 def get_numbers_ndarray():
     numbers = np.empty((0, 9, 2), int)
-    numbers_image = cv2.imread("./image/0-9.png", cv2.IMREAD_GRAYSCALE)
+    numbers_image = cv2.imread("./images/0-9.png", cv2.IMREAD_GRAYSCALE)
     numbers_image, contours, hierarchy = cv2.findContours(numbers_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     rects = convert_contours_to_rects(contours)
     rects = remove_same_x_rect(rects)
     for [x, y, w, h] in rects:
-        number = numbers_image[y:y + 9, x:x + 2]
+        number = numbers_image[y:y+9, x:x+2]
         numbers = np.append(numbers, [number], axis=0)
         # cv2.rectangle(numbers_image, (x, y), (x + w, y + h), (0, 0, 255), 1)
     return numbers
