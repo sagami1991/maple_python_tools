@@ -20,14 +20,14 @@
     * http://landinghub.visualstudio.com/visual-cpp-build-tools
         * サイト上部の「Download Visual C++ Build Tools 2015」をクリックし、ダウンード、インストール 
 1. 本ツールをダウンロード、適当なフォルダに配置
-    * 
+    * https://github.com/socket1016/maple_python_tools/archive/master.zip
 1. 依存パッケージのインストール
-    1. スタート→powershell（もしくはコマンドプロンプト）を開き、4で配置したフォルダに移動
+    1. スタート→powershell（もしくはコマンドプロンプト）を開き、4で配置したフォルダに移動（移動コマンド: `cd C:\xxx\maple_python_tools`）
     1. コマンド`pip install -r ./requirements.txt`と入力し実行（5分ほどかかる）
 
 ## 動作確認
 1. メイプル上で、「[モンスター狩り]ハンターの本能」のみを表示した業績アラートを右上に配置
     * ちょうどスキルアイコンの下、右端は画面右端にくっつける
-1. powershell（もしくはコマンドプロンプト）を**管理者権限**で実行し、導入手順4で配置したフォルダに移動
+1. powershell（もしくはコマンドプロンプト）を**管理者権限**で実行し、導入手順4で配置したフォルダに移動（移動コマンド: `cd C:\xxx\maple_python_tools`）
 1. コマンド`python ./count_killed_enemies.py`と入力し実行
 1. 数値が取得できていれば成功 
