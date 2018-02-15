@@ -1,7 +1,7 @@
 from game_controller import GameController
 import time
 
-# グループ申請許可→スキル→追放
+# 5秒毎にグループ申請監視→グループ申請許可→スキルかける→追放
 if __name__ == '__main__':
     while True:
         game = GameController()

@@ -13,7 +13,7 @@ class MainWindow(QFrame):
     def __init__(self) -> None:
         super(MainWindow, self).__init__()
         self.setFixedSize(200, 50)
-        self.setWindowTitle("Maple auto HS 2pc")
+        self.setWindowTitle("Maple Tools")
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         button = QPushButton("シグナスへ行く", self)
         button.clicked.connect(MainWindow.go_to_cygnus)
